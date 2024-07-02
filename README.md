@@ -1,2 +1,1 @@
-# aprendaem2horas
-Aprenda em menos de 2 horas
+# Aprenda em menos de 2 Horas Cursos
