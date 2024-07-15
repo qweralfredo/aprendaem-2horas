@@ -1,0 +1,4 @@
+create a local serverless big data access
+gcsfuse --implicit-dirs lance-db /home/qwer_alfredo/lance-db
+
+
