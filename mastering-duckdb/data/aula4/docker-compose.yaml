@@ -19,3 +19,7 @@ services:
       MYSQL_DATABASE: lord_duckdb_mysql
     ports:
       - "3306:3306"
+
+
+
+      
