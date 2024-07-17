@@ -1,0 +1,23 @@
+4vcpu 8GB de memória
+
+-1MM
+-10MM
+-100MM
+-500MM
+-1B
+
+
+ETL
+Partição
+Stack
+    Kafka
+    Pinot
+    Clickhouse
+    Minio
+    Yugabyte
+    Duckdb
+    
+Batch
+Realtime
+Analytics
+Monitoramento
