@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+  trino:
+    hostname: trino
+    image: 'trinodb/trino'
+    ports:
+      - '8080:8080' 
+    volumes:
+      - ${PWD}/trino-etc:/usr/share
