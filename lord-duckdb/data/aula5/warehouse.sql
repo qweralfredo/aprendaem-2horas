@@ -231,7 +231,42 @@ create table dimensao_fator_area as
 select distinct codigo_fator_area, fator_area from big_fact_ocorrencias;
 
   
- 
+ %%sql
+
+copy ( select * from db.dimensao_aeronave_ano_fabricacao        ) to 's3://lord-duckdb/bi/dimensao_aeronave_ano_fabricacao.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_aeronave_assentos              ) to 's3://lord-duckdb/bi/dimensao_aeronave_assentos.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_aeronave_fase_operacao         ) to 's3://lord-duckdb/bi/dimensao_aeronave_fase_operacao.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_aeronave_modelo                ) to 's3://lord-duckdb/bi/dimensao_aeronave_modelo.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_aeronave_motor_quantidade      ) to 's3://lord-duckdb/bi/dimensao_aeronave_motor_quantidade.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_aeronave_motor_tipo            ) to 's3://lord-duckdb/bi/dimensao_aeronave_nivel_dano.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_aeronave_nivel_dano            ) to 's3://lord-duckdb/bi/dimensao_aeronave_nivel_dano.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_aeronave_pais_fabricante       ) to 's3://lord-duckdb/bi/dimensao_aeronave_pais_fabricante.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_aeronave_pais_registro         ) to 's3://lord-duckdb/bi/dimensao_aeronave_pais_registro.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_aeronave_pmd                   ) to 's3://lord-duckdb/bi/dimensao_aeronave_pmd.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_aeronave_registro_categoria    ) to 's3://lord-duckdb/bi/dimensao_aeronave_registro_segmento.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_aeronave_registro_segmento     ) to 's3://lord-duckdb/bi/dimensao_aeronave_registro_segmento.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_aeronave_tipo_icao             ) to 's3://lord-duckdb/bi/dimensao_aeronave_tipo_operacao.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_aeronave_tipo_operacao         ) to 's3://lord-duckdb/bi/dimensao_aeronave_tipo_operacao.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_aeronave_tipo_veiculo          ) to 's3://lord-duckdb/bi/dimensao_aeronave_tipo_veiculo.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_aeronave_voo_destino           ) to 's3://lord-duckdb/bi/dimensao_codigo_aeronave_motor_tipo.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_aeronave_voo_origem            ) to 's3://lord-duckdb/bi/dimensao_codigo_aeronave_motor_tipo.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_codigo_aeronave_motor_tipo     ) to 's3://lord-duckdb/bi/dimensao_codigo_aeronave_motor_tipo.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_divulgacao_relatorio_publicado ) to 's3://lord-duckdb/bi/dimensao_divulgacao_relatorio_publicado.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_fator_area                     ) to 's3://lord-duckdb/bi/dimensao_fator_area.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_fator_aspecto                  ) to 's3://lord-duckdb/bi/dimensao_fator_aspecto.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_fator_condicionante            ) to 's3://lord-duckdb/bi/dimensao_fator_condicionante.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_investigacao_aeronave_liberada ) to 's3://lord-duckdb/bi/dimensao_investigacao_aeronave_liberada.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_investigacao_status            ) to 's3://lord-duckdb/bi/dimensao_investigacao_status.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_ocorrencia_aerodromo           ) to 's3://lord-duckdb/bi/dimensao_ocorrencia_aerodromo.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_ocorrencia_cidade              ) to 's3://lord-duckdb/bi/dimensao_ocorrencia_pais.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_ocorrencia_pais                ) to 's3://lord-duckdb/bi/dimensao_ocorrencia_pais.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_ocorrencia_saida_pista         ) to 's3://lord-duckdb/bi/dimensao_ocorrencia_saida_pista.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_ocorrencia_uf                  ) to 's3://lord-duckdb/bi/dimensao_ocorrencia_uf.csv' with (FORMAT CSV);
+copy ( select * from db.dimension_ocorrencia_tipo               ) to 's3://lord-duckdb/bi/dimension_ocorrencia_tipo.csv' with (FORMAT CSV);
+copy ( select * from db.dimension_ocorrencia_tipo_categoria     ) to 's3://lord-duckdb/bi/dimension_ocorrencia_tipo_categoria.csv' with (FORMAT CSV);
+copy ( select * from db.big_fact_ocorrencias     ) to 's3://lord-duckdb/bi/big_fact_ocorrencias.csv' with (FORMAT CSV);
+
+
 
 
 
