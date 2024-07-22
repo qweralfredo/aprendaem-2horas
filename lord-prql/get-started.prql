@@ -1,0 +1,27 @@
+#let vv = column -> s"AVVG({column},{dd})"
+#
+#from testes =t
+#join cust=customers (== customer_id)
+#filter testes.id == 1
+#sort {testes.id}
+#group {testes.categoria}(
+#    
+#    aggregate {
+#        categoria = count(testes.categoria),
+#        total = sum(testes.valor),
+#        ids = testes.id,
+#        t = vv testes.valor, testes.valor
+#    }
+#
+#) 
+
+
+
+
+let total = 10
+from [{n = 3}]
+loop (
+    filter n<total
+    derive url = f"https://jsonplaceholder.typicode.com/todos/"
+    select  url
+)
