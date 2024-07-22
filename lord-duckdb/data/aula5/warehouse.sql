@@ -268,19 +268,42 @@ copy ( select * from db.big_fact_ocorrencias     ) to 's3://lord-duckdb/bi/big_f
 
 
 
-
-
-
-
-
-
-
-
+create view dimensao_aeronave_ano_fabricacao        as select * from 's3://lord-duckdb/bi/dimensao_aeronave_ano_fabricacao.csv';
+create view dimensao_aeronave_assentos              as select * from 's3://lord-duckdb/bi/dimensao_aeronave_assentos.csv';
+create view dimensao_aeronave_fase_operacao         as select * from 's3://lord-duckdb/bi/dimensao_aeronave_fase_operacao.csv';
+create view dimensao_aeronave_modelo                as select * from 's3://lord-duckdb/bi/dimensao_aeronave_modelo.csv';
+create view dimensao_aeronave_motor_quantidade      as select * from 's3://lord-duckdb/bi/dimensao_aeronave_motor_quantidade.csv';
+create view dimensao_aeronave_motor_tipo            as select * from 's3://lord-duckdb/bi/dimensao_aeronave_nivel_dano.csv';
+create view dimensao_aeronave_nivel_dano            as select * from 's3://lord-duckdb/bi/dimensao_aeronave_nivel_dano.csv';
+create view dimensao_aeronave_pais_fabricante       as select * from 's3://lord-duckdb/bi/dimensao_aeronave_pais_fabricante.csv';
+create view dimensao_aeronave_pais_registro         as select * from 's3://lord-duckdb/bi/dimensao_aeronave_pais_registro.csv';
+create view dimensao_aeronave_pmd                   as select * from 's3://lord-duckdb/bi/dimensao_aeronave_pmd.csv';
+create view dimensao_aeronave_registro_categoria    as select * from 's3://lord-duckdb/bi/dimensao_aeronave_registro_segmento.csv';
+create view dimensao_aeronave_registro_segmento     as select * from 's3://lord-duckdb/bi/dimensao_aeronave_registro_segmento.csv';
+create view dimensao_aeronave_tipo_icao             as select * from 's3://lord-duckdb/bi/dimensao_aeronave_tipo_operacao.csv';
+create view dimensao_aeronave_tipo_operacao         as select * from 's3://lord-duckdb/bi/dimensao_aeronave_tipo_operacao.csv';
+create view dimensao_aeronave_tipo_veiculo          as select * from 's3://lord-duckdb/bi/dimensao_aeronave_tipo_veiculo.csv';
+create view dimensao_aeronave_voo_destino           as select * from 's3://lord-duckdb/bi/dimensao_codigo_aeronave_motor_tipo.csv';
+create view dimensao_aeronave_voo_origem            as select * from 's3://lord-duckdb/bi/dimensao_codigo_aeronave_motor_tipo.csv';
+create view dimensao_codigo_aeronave_motor_tipo     as select * from 's3://lord-duckdb/bi/dimensao_codigo_aeronave_motor_tipo.csv';
+create view dimensao_divulgacao_relatorio_publicado as select * from 's3://lord-duckdb/bi/dimensao_divulgacao_relatorio_publicado.csv';
+create view dimensao_fator_area                     as select * from 's3://lord-duckdb/bi/dimensao_fator_area.csv';
+create view dimensao_fator_aspecto                  as select * from 's3://lord-duckdb/bi/dimensao_fator_aspecto.csv';
+create view dimensao_fator_condicionante            as select * from 's3://lord-duckdb/bi/dimensao_fator_condicionante.csv';
+create view dimensao_investigacao_aeronave_liberada as select * from 's3://lord-duckdb/bi/dimensao_investigacao_aeronave_liberada.csv';
+create view dimensao_investigacao_status            as select * from 's3://lord-duckdb/bi/dimensao_investigacao_status.csv';
+create view dimensao_ocorrencia_aerodromo           as select * from 's3://lord-duckdb/bi/dimensao_ocorrencia_aerodromo.csv';
+create view dimensao_ocorrencia_cidade              as select * from 's3://lord-duckdb/bi/dimensao_ocorrencia_pais.csv';
+create view dimensao_ocorrencia_pais                as select * from 's3://lord-duckdb/bi/dimensao_ocorrencia_pais.csv';
+create view dimensao_ocorrencia_saida_pista         as select * from 's3://lord-duckdb/bi/dimensao_ocorrencia_saida_pista.csv';
+create view dimensao_ocorrencia_uf                  as select * from 's3://lord-duckdb/bi/dimensao_ocorrencia_uf.csv';
+create view dimension_ocorrencia_tipo               as select * from 's3://lord-duckdb/bi/dimension_ocorrencia_tipo.csv';
+create view dimension_ocorrencia_tipo_categoria     as select * from 's3://lord-duckdb/bi/dimension_ocorrencia_tipo_categoria.csv';
 
 --criar chaves nas dimensoes, e atualizar os fatos com as referencias
 --trocar valores nulos com N/A ou Unknow 
 
 
-	
+
 
 
