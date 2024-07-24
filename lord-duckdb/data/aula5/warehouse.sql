@@ -8,11 +8,16 @@ select * from ocorrencia_tipo ot  ;
 
 select * from recomendacao r ;
 
-drop  MATERIALIZED VIEW big_fact_ocorrencias;
-
+drop  MATERIALIZED VIEW big_fact_ocorrencias; 
 create MATERIALIZED VIEW big_fact_ocorrencias as 
 select 
 o.codigo_ocorrencia,
+o.ocorrencia_longitude,
+o.ocorrencia_latitude,
+o.ocorrencia_dia,
+o.ocorrencia_hora,
+DENSE_RANK()  over ( order by o.ocorrencia_classificacao asc ) as codigo_ocorrencia_classificacao,
+o.ocorrencia_classificacao ,
 DENSE_RANK()  over ( order by ot.ocorrencia_tipo asc ) as codigo_ocorrencia_tipo,
 ot.ocorrencia_tipo ,
 DENSE_RANK()  over ( order by ot.ocorrencia_tipo_categoria,ot.taxonomia_tipo_icao  asc ) as codigo_ocorrencia_tipo_categoria,
@@ -86,7 +91,7 @@ left join ocorrencia_tipo ot on o.codigo_ocorrencia1 = ot.codigo_ocorrencia1
 left join aeronave a on o.codigo_ocorrencia2 = a.codigo_ocorrencia2
 left join fator_contribuinte fc on o.codigo_ocorrencia3 = fc.codigo_ocorrencia3
 left join recomendacao r on o.codigo_ocorrencia4 = r.codigo_ocorrencia4  
- 
+
  
 select * from big_fact_ocorrencias limit 10;
 
@@ -233,6 +238,8 @@ select distinct codigo_fator_area, fator_area from big_fact_ocorrencias;
   
  %%sql
 
+
+
 copy ( select * from db.dimensao_aeronave_ano_fabricacao        ) to 's3://lord-duckdb/bi/dimensao_aeronave_ano_fabricacao.csv' with (FORMAT CSV);
 copy ( select * from db.dimensao_aeronave_assentos              ) to 's3://lord-duckdb/bi/dimensao_aeronave_assentos.csv' with (FORMAT CSV);
 copy ( select * from db.dimensao_aeronave_fase_operacao         ) to 's3://lord-duckdb/bi/dimensao_aeronave_fase_operacao.csv' with (FORMAT CSV);
@@ -258,50 +265,64 @@ copy ( select * from db.dimensao_fator_condicionante            ) to 's3://lord-
 copy ( select * from db.dimensao_investigacao_aeronave_liberada ) to 's3://lord-duckdb/bi/dimensao_investigacao_aeronave_liberada.csv' with (FORMAT CSV);
 copy ( select * from db.dimensao_investigacao_status            ) to 's3://lord-duckdb/bi/dimensao_investigacao_status.csv' with (FORMAT CSV);
 copy ( select * from db.dimensao_ocorrencia_aerodromo           ) to 's3://lord-duckdb/bi/dimensao_ocorrencia_aerodromo.csv' with (FORMAT CSV);
-copy ( select * from db.dimensao_ocorrencia_cidade              ) to 's3://lord-duckdb/bi/dimensao_ocorrencia_pais.csv' with (FORMAT CSV);
+copy ( select * from db.dimensao_ocorrencia_cidade              ) to 's3://lord-duckdb/bi/dimensao_ocorrencia_cidade.csv' with (FORMAT CSV);
 copy ( select * from db.dimensao_ocorrencia_pais                ) to 's3://lord-duckdb/bi/dimensao_ocorrencia_pais.csv' with (FORMAT CSV);
 copy ( select * from db.dimensao_ocorrencia_saida_pista         ) to 's3://lord-duckdb/bi/dimensao_ocorrencia_saida_pista.csv' with (FORMAT CSV);
 copy ( select * from db.dimensao_ocorrencia_uf                  ) to 's3://lord-duckdb/bi/dimensao_ocorrencia_uf.csv' with (FORMAT CSV);
 copy ( select * from db.dimension_ocorrencia_tipo               ) to 's3://lord-duckdb/bi/dimension_ocorrencia_tipo.csv' with (FORMAT CSV);
 copy ( select * from db.dimension_ocorrencia_tipo_categoria     ) to 's3://lord-duckdb/bi/dimension_ocorrencia_tipo_categoria.csv' with (FORMAT CSV);
 copy ( select * from db.big_fact_ocorrencias     ) to 's3://lord-duckdb/bi/big_fact_ocorrencias.csv' with (FORMAT CSV);
+copy ( select * from db.calendario     ) to 's3://lord-duckdb/bi/calendario.parquet' with (FORMAT parquet);
 
 
 
-create view dimensao_aeronave_ano_fabricacao        as select * from 's3://lord-duckdb/bi/dimensao_aeronave_ano_fabricacao.csv';
-create view dimensao_aeronave_assentos              as select * from 's3://lord-duckdb/bi/dimensao_aeronave_assentos.csv';
-create view dimensao_aeronave_fase_operacao         as select * from 's3://lord-duckdb/bi/dimensao_aeronave_fase_operacao.csv';
-create view dimensao_aeronave_modelo                as select * from 's3://lord-duckdb/bi/dimensao_aeronave_modelo.csv';
-create view dimensao_aeronave_motor_quantidade      as select * from 's3://lord-duckdb/bi/dimensao_aeronave_motor_quantidade.csv';
-create view dimensao_aeronave_motor_tipo            as select * from 's3://lord-duckdb/bi/dimensao_aeronave_nivel_dano.csv';
-create view dimensao_aeronave_nivel_dano            as select * from 's3://lord-duckdb/bi/dimensao_aeronave_nivel_dano.csv';
-create view dimensao_aeronave_pais_fabricante       as select * from 's3://lord-duckdb/bi/dimensao_aeronave_pais_fabricante.csv';
-create view dimensao_aeronave_pais_registro         as select * from 's3://lord-duckdb/bi/dimensao_aeronave_pais_registro.csv';
-create view dimensao_aeronave_pmd                   as select * from 's3://lord-duckdb/bi/dimensao_aeronave_pmd.csv';
-create view dimensao_aeronave_registro_categoria    as select * from 's3://lord-duckdb/bi/dimensao_aeronave_registro_segmento.csv';
-create view dimensao_aeronave_registro_segmento     as select * from 's3://lord-duckdb/bi/dimensao_aeronave_registro_segmento.csv';
-create view dimensao_aeronave_tipo_icao             as select * from 's3://lord-duckdb/bi/dimensao_aeronave_tipo_operacao.csv';
-create view dimensao_aeronave_tipo_operacao         as select * from 's3://lord-duckdb/bi/dimensao_aeronave_tipo_operacao.csv';
-create view dimensao_aeronave_tipo_veiculo          as select * from 's3://lord-duckdb/bi/dimensao_aeronave_tipo_veiculo.csv';
-create view dimensao_aeronave_voo_destino           as select * from 's3://lord-duckdb/bi/dimensao_codigo_aeronave_motor_tipo.csv';
-create view dimensao_aeronave_voo_origem            as select * from 's3://lord-duckdb/bi/dimensao_codigo_aeronave_motor_tipo.csv';
-create view dimensao_codigo_aeronave_motor_tipo     as select * from 's3://lord-duckdb/bi/dimensao_codigo_aeronave_motor_tipo.csv';
-create view dimensao_divulgacao_relatorio_publicado as select * from 's3://lord-duckdb/bi/dimensao_divulgacao_relatorio_publicado.csv';
-create view dimensao_fator_area                     as select * from 's3://lord-duckdb/bi/dimensao_fator_area.csv';
-create view dimensao_fator_aspecto                  as select * from 's3://lord-duckdb/bi/dimensao_fator_aspecto.csv';
-create view dimensao_fator_condicionante            as select * from 's3://lord-duckdb/bi/dimensao_fator_condicionante.csv';
-create view dimensao_investigacao_aeronave_liberada as select * from 's3://lord-duckdb/bi/dimensao_investigacao_aeronave_liberada.csv';
-create view dimensao_investigacao_status            as select * from 's3://lord-duckdb/bi/dimensao_investigacao_status.csv';
-create view dimensao_ocorrencia_aerodromo           as select * from 's3://lord-duckdb/bi/dimensao_ocorrencia_aerodromo.csv';
-create view dimensao_ocorrencia_cidade              as select * from 's3://lord-duckdb/bi/dimensao_ocorrencia_pais.csv';
-create view dimensao_ocorrencia_pais                as select * from 's3://lord-duckdb/bi/dimensao_ocorrencia_pais.csv';
-create view dimensao_ocorrencia_saida_pista         as select * from 's3://lord-duckdb/bi/dimensao_ocorrencia_saida_pista.csv';
-create view dimensao_ocorrencia_uf                  as select * from 's3://lord-duckdb/bi/dimensao_ocorrencia_uf.csv';
-create view dimension_ocorrencia_tipo               as select * from 's3://lord-duckdb/bi/dimension_ocorrencia_tipo.csv';
-create view dimension_ocorrencia_tipo_categoria     as select * from 's3://lord-duckdb/bi/dimension_ocorrencia_tipo_categoria.csv';
 
+
+create table fato_ocorrencia        as select * from 's3://lord-duckdb/bi/big_fact_ocorrencias.csv';
+create table calendario        as select * from 's3://lord-duckdb/bi/calendario.parquet';
+create table dimensao_aeronave_ano_fabricacao        as select * from 's3://lord-duckdb/bi/dimensao_aeronave_ano_fabricacao.csv';
+create table dimensao_aeronave_assentos              as select * from 's3://lord-duckdb/bi/dimensao_aeronave_assentos.csv';
+create table dimensao_aeronave_fase_operacao         as select * from 's3://lord-duckdb/bi/dimensao_aeronave_fase_operacao.csv';
+create table dimensao_aeronave_modelo                as select * from 's3://lord-duckdb/bi/dimensao_aeronave_modelo.csv';
+create table dimensao_aeronave_motor_quantidade      as select * from 's3://lord-duckdb/bi/dimensao_aeronave_motor_quantidade.csv';
+create table dimensao_aeronave_motor_tipo            as select * from 's3://lord-duckdb/bi/dimensao_aeronave_nivel_dano.csv';
+create table dimensao_aeronave_nivel_dano            as select * from 's3://lord-duckdb/bi/dimensao_aeronave_nivel_dano.csv';
+create table dimensao_aeronave_pais_fabricante       as select * from 's3://lord-duckdb/bi/dimensao_aeronave_pais_fabricante.csv';
+create table dimensao_aeronave_pais_registro         as select * from 's3://lord-duckdb/bi/dimensao_aeronave_pais_registro.csv';
+create table dimensao_aeronave_pmd                   as select * from 's3://lord-duckdb/bi/dimensao_aeronave_pmd.csv';
+create table dimensao_aeronave_registro_categoria    as select * from 's3://lord-duckdb/bi/dimensao_aeronave_registro_segmento.csv';
+create table dimensao_aeronave_registro_segmento     as select * from 's3://lord-duckdb/bi/dimensao_aeronave_registro_segmento.csv';
+create table dimensao_aeronave_tipo_icao             as select * from 's3://lord-duckdb/bi/dimensao_aeronave_tipo_operacao.csv';
+create table dimensao_aeronave_tipo_operacao         as select * from 's3://lord-duckdb/bi/dimensao_aeronave_tipo_operacao.csv';
+create table dimensao_aeronave_tipo_veiculo          as select * from 's3://lord-duckdb/bi/dimensao_aeronave_tipo_veiculo.csv';
+create table dimensao_aeronave_voo_destino           as select * from 's3://lord-duckdb/bi/dimensao_codigo_aeronave_motor_tipo.csv';
+create table dimensao_aeronave_voo_origem            as select * from 's3://lord-duckdb/bi/dimensao_codigo_aeronave_motor_tipo.csv';
+create table dimensao_codigo_aeronave_motor_tipo     as select * from 's3://lord-duckdb/bi/dimensao_codigo_aeronave_motor_tipo.csv';
+create table dimensao_divulgacao_relatorio_publicado as select * from 's3://lord-duckdb/bi/dimensao_divulgacao_relatorio_publicado.csv';
+create table dimensao_fator_area                     as select * from 's3://lord-duckdb/bi/dimensao_fator_area.csv';
+create table dimensao_fator_aspecto                  as select * from 's3://lord-duckdb/bi/dimensao_fator_aspecto.csv';
+create table dimensao_fator_condicionante            as select * from 's3://lord-duckdb/bi/dimensao_fator_condicionante.csv';
+create table dimensao_investigacao_aeronave_liberada as select * from 's3://lord-duckdb/bi/dimensao_investigacao_aeronave_liberada.csv';
+create table dimensao_investigacao_status            as select * from 's3://lord-duckdb/bi/dimensao_investigacao_status.csv';
+create table dimensao_ocorrencia_aerodromo           as select * from 's3://lord-duckdb/bi/dimensao_ocorrencia_aerodromo.csv';
+create table dimensao_ocorrencia_cidade              as select * from 's3://lord-duckdb/bi/dimensao_ocorrencia_pais.csv';
+create table dimensao_ocorrencia_pais                as select * from 's3://lord-duckdb/bi/dimensao_ocorrencia_pais.csv';
+create table dimensao_ocorrencia_saida_pista         as select * from 's3://lord-duckdb/bi/dimensao_ocorrencia_saida_pista.csv';
+create table dimensao_ocorrencia_uf                  as select * from 's3://lord-duckdb/bi/dimensao_ocorrencia_uf.csv';
+create table dimension_ocorrencia_tipo               as select * from 's3://lord-duckdb/bi/dimension_ocorrencia_tipo.csv';
+create table dimension_ocorrencia_tipo_categoria     as select * from 's3://lord-duckdb/bi/dimension_ocorrencia_tipo_categoria.csv';
+
+
+create table calendario     as select * from 's3://lord-duckdb/bi/calendario.parquet';
+
+
+
+
+
+--padronizar tabela campos data da tabela ocorrencia
 --criar chaves nas dimensoes, e atualizar os fatos com as referencias
 --trocar valores nulos com N/A ou Unknow 
+
 
 
 
